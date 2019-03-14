@@ -60,13 +60,13 @@ var drawInitial = function(data,day)
      .attr("width", barWidth)
      .attr("height", function(d){return d.grade;})
      .attr("fill", function(d) {
-       return colors(d.name);})
+       return colors(d.name);});
 
 
 
        var button1 = document.createElement("button");
        button1.innerHTML = "Previous";
-       button1.on("click",function(d){console.log("yes");  } ) ;
+       //button1.on("click",function(d){console.log("yes");  } ) ;
        var body = document.getElementsByTagName("body")[0];
        body.appendChild(button1);
 
