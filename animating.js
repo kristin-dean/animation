@@ -18,15 +18,15 @@ function(err)
 var drawInitial = function(data,day)
 {
   var svg = d3.select("svg")
-              .attr("height", 500)
-              .attr("width", 500);
+              .attr("height", 600)
+              .attr("width", 600);
 
   var margins =
   {
-    left:10,
-    right:10,
+    left:40,
+    right:90,
     top:10,
-    bottom:10
+    bottom:40
   }
 
 
@@ -35,8 +35,8 @@ var drawInitial = function(data,day)
 
   var students = data[day].grades;
 
-  var width = 500 - margins.left - margins.right;
-  var height = 500 - margins.top - margins.bottom;
+  var width = 600 - margins.left - margins.right;
+  var height = 600 - margins.top - margins.bottom;
   var barWidth = width / students.length;
 
   var xScale = d3.scaleLinear()
@@ -57,14 +57,20 @@ var drawInitial = function(data,day)
      .enter()
      .append("rect")
      .attr("x", function(d,i) {
-       return xScale(i);})
+       return xScale(i)+ margins.left;})
      .attr("y", function (d,i) {
-       return yScale(d.grade);})
+       return yScale(d.grade) + margins.top;})
      .attr("width", barWidth)
      .attr("height", function(d){return height - yScale(d.grade);})
      .attr("fill", function(d) {
-      return colors(d.name);});
+      return colors(d.name);})
 
+
+           .append("title")
+           .text(function(d)
+           {
+              return d.name +"'s' grade is " + d.grade;
+           });
 
 
        var body = d3.select("body");
@@ -73,7 +79,8 @@ var drawInitial = function(data,day)
            .text("Previous");
 
         previous1 = d3.select("#previous");
-        previous1.on("click",function(d){previous(data,day)   });
+        previous1.on("click",function(d){previous(data,day-1)   })
+                 .attr("disabled",true);
 
 
         var body = d3.select("body");
@@ -82,7 +89,44 @@ var drawInitial = function(data,day)
             .text("Next");
 
          next1 = d3.select("#next");
-         next1.on("click",function(d){next(data,day)   });
+         next1.on("click",function(d){next(data,day+1)   });
+
+
+         var yAxis = d3.axisLeft(yScale);
+             svg.append("g")
+             .classed(yAxis,true)
+               .call(yAxis)
+               .attr("transform","translate(" + margins.left + "," + margins.top + ")");
+
+
+
+        var legend = svg.append("g")
+                 .classed("legend",true)
+                 .attr("transform","translate("+
+                 (width + margins.left) + "," + margins.top+")");
+
+                 var legendLines = legend.selectAll("g")
+                     .data(students)
+                     .enter()
+                     .append("g")
+                     .classed("legendLines",true)
+                     .attr("transform",function(d,i)
+                     {
+                       return "translate(20," + (i*20 +5) +")";}
+                   )
+
+                 legendLines.append("rect")
+                         .attr("x", 0)
+                         .attr("y", function(d,i){return i*20;})
+                         .attr("width", 10)
+                         .attr("height", 10)
+                         .attr("fill",function(d) {return colors(d.name);})
+
+                 legendLines.append("text")
+                       .attr("x",20)
+                       .attr("y",function(d,i){return i*20+10;})
+                       .text(function(d){return d.name;});
+
 
 
 
@@ -104,9 +148,12 @@ var drawInitial = function(data,day)
 var updateChart = function(data,day)
 {
 
+              var dayHeader = d3.select("h2");
+              dayHeader.text("Day " + (parseInt(day)+1));
+
               var svg = d3.select("svg")
-              .attr("height", 500)
-              .attr("width", 500)
+              .attr("height", 600)
+              .attr("width", 600);
 
               var students = data[day].grades;
               console.log(students);
@@ -114,15 +161,17 @@ var updateChart = function(data,day)
 
   var margins =
   {
-    left:10,
-    right:10,
+    left:40,
+    right:90,
     top:10,
-    bottom:10
+    bottom:40
   }
 
 
-  var width = 500 - margins.left - margins.right;
-  var height = 500 - margins.top - margins.bottom;
+
+
+  var width = 600 - margins.left - margins.right;
+  var height = 600 - margins.top - margins.bottom;
   var barWidth = width / students.length
 
   var xScale = d3.scaleLinear()
@@ -133,6 +182,12 @@ var updateChart = function(data,day)
                  .domain([0,100])
                  .range([height,0]);
 
+  var yAxis = d3.axisLeft(yScale);
+  svg.append("g")
+      .classed(yAxis,true)
+        .call(yAxis)
+        .attr("transform","translate(" + margins.left + "," + margins.top + ")");
+
 
 
   var colors = d3.scaleOrdinal(d3.schemeSet3);
@@ -141,13 +196,25 @@ var updateChart = function(data,day)
      .data(students)
      .transition()
      .attr("x", function(d,i) {
-       return xScale(i);})
+       return xScale(i) + margins.left;})
      .attr("y", function (d,i) {
-       return yScale(d.grade);})
+       return yScale(d.grade) + margins.top;})
      .attr("width", barWidth)
      .attr("height",function(d){return height - yScale(d.grade)})
      .attr("fill", function(d) {
-       return colors(d.name);});
+       return colors(d.name);})
+
+     var title = d3.selectAll("title");
+     title.remove()
+     svg.selectAll("rect")
+     .append("title")
+     .text(function(d)
+     {
+        return d.name +"'s' grade is " + d.grade;
+     });
+
+
+
 
 
 //***************************************** functions corresponding to buttons **************************************************//
@@ -165,7 +232,7 @@ var updateChart = function(data,day)
 var next = function(data,currentDay)
 {
   var newDay = parseInt(currentDay);
-  console.log(currentDay)
+
   updateChart(data,newDay);
 }
 
@@ -173,14 +240,36 @@ var next = function(data,currentDay)
 var updateButtons = function(data,day)
 {
   var next1 = d3.select("#next");
+  var previous1 = d3.select("#previous");
   next1.on("click",function(d){next(data,day+1) });
 
 
+  if(day==9)
+  {
+      next1.attr("disabled",true);
 
-  var previous1 = d3.select("#previous");
+  }
+
+  if(day>0)
+  {
+    previous1.attr("disabled",null)
+
+  }
+
+
+
+
+
   previous1.on("click",function(d){previous(data,day-1)   });
+  if(day==0)
+  {
+      previous1.attr("disabled",true);
+  }
 
-
+  if(day<9)
+  {
+    next1.attr("disabled",null);
+  }
 
 
 
