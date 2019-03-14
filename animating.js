@@ -63,14 +63,14 @@ var drawInitial = function(data,day)
        button1.innerHTML = "Previous";
        button1.on("click",function(d){console.log("yes");  } ) ;
        var body = document.getElementsByTagName("body")[0];
-       document.body.appendChild(button1);
+       body.appendChild(button1);
 
 
        console.log("hi");
        var button2 = document.createElement("button");
        button2.innerHTML = "Next";
        var body = document.getElementsByTagName("body")[0];
-       document.body.appendChild(button2);
+       body.appendChild(button2);
 
 }
 
