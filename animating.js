@@ -97,11 +97,10 @@ var updateChart = function(data,day)
               var svg = d3.select("svg")
               .attr("height", 500)
               .attr("width", 500)
-              .classed(xAxis,true)
-              .call(xAxis);
 
               var students = data[day].grades;
               console.log(students);
+              console.log(day);
 
   var margins =
   {
@@ -130,7 +129,7 @@ var updateChart = function(data,day)
 
   svg.selectAll("rect")
      .data(students)
-     .append("rect")
+     .transition()
      .attr("x", function(d,i) {
        return xScale(i);})
      .attr("y", function (d,i) {
@@ -140,6 +139,8 @@ var updateChart = function(data,day)
      .attr("fill", function(d) {
        return colors(d.name);});
 
+
+    console.log(students,svg)
 //******************************************** functions corresponding to buttons **************************************************//
 
 }
