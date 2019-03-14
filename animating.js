@@ -5,7 +5,7 @@ var gradesP = d3.json("gradeDataTime.json");
 
 gradesP.then(function(d)
 {
-  drawInitial(d,5);
+  drawInitial(d,3);
 },
 function(err)
 {
@@ -61,34 +61,42 @@ var drawInitial = function(data,day)
      .attr("width", barWidth)
      .attr("height", function(d){return d.grade;})
      .attr("fill", function(d) {
-       return colors(d.name);});
+      return colors(d.name);});
 
 
 
-       var button1 = document.createElement("button");
-       button1.innerHTML = "Previous";
-       //button1.on("click",function(d){console.log("yes");  } ) ;
-       var body = document.getElementsByTagName("body")[0];
-       body.appendChild(button1);
+       var body = d3.select("body");
+       body.append("button")
+           .attr("id","previous")
+           .text("Previous");
+
+        previous1 = d3.select("#previous");
+        previous1.on("click",function(d){previous(data,day)   });
 
 
+
+       //button1.on("click",function(d){console.log("hi");});
+
+       /*
        console.log("hi");
        var button2 = document.createElement("button");
        button2.innerHTML = "Next";
        var body = document.getElementsByTagName("body")[0];
        body.appendChild(button2);
-
+       */
 }
 
 
 //******************************************** function to update according to day **************************************************//
 
-var updateChart = function(data,day) {
-  var svg = d3.select("svg")
+var updateChart = function(data,day)
+{
+
+              var svg = d3.select("svg")
               .attr("height", 500)
               .attr("width", 500);
-
-
+              var students = data[day].grades;
+              console.log(students);
   var margins =
   {
     left:10,
@@ -97,7 +105,6 @@ var updateChart = function(data,day) {
     bottom:10
   }
 
-  var students = data[day].grades;
 
   var width = 500 - margins.left - margins.right;
   var height = 500 - margins.top - margins.bottom;
@@ -119,9 +126,9 @@ var updateChart = function(data,day) {
      .attr("x", function(d,i) {
        return xScale(i);})
      .attr("y", function (d,i) {
-       return height - yScale(d.grade);})
+       return height - d.grade;})
      .attr("width", barWidth)
-     .attr("height",function(d){return yScale(d.grade)})
+     .attr("height",function(d){return d.grade})
      .attr("fill", function(d) {
        return colors(d.name);});
 
@@ -129,11 +136,11 @@ var updateChart = function(data,day) {
 
 }
 
-  var previous = function(data)
+  var previous = function(data,currentDay)
 {
-  var currentDay = d3.select("p").text();
   var newDay = parseInt(currentDay)-1;
-  updateChart(data,newDay)
+  updateChart(data,newDay);
+
 }
 
 var next = function(data)
