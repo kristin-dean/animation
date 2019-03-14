@@ -110,7 +110,7 @@ var updateChart = function(data,day) {
                  .domain([0,100])
                  .range([height,0]);
 
-  var colors = d3.scaleOrdinal(d3.schemeAccent);
+  var colors = d3.scaleOrdinal(d3.d3.schemeSet3);
 
   svg.selectAll("rect")
      .data(students)
