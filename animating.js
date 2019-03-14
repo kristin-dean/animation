@@ -1,3 +1,5 @@
+//******************************************** set up data & call functions **************************************************//
+
 var gradesP = d3.json("gradeDataTime.json");
 
 gradesP.then(function(d)
@@ -8,6 +10,9 @@ function(err)
 {
   console.log(err);
 })
+
+
+//************************************************** initialize the SVG *******************************************************//
 
 var drawInitial = function(data,day)
 {
@@ -75,6 +80,8 @@ var drawInitial = function(data,day)
 }
 
 
+//******************************************** function to update according to day **************************************************//
+
 var updateChart = function(data,day) {
   var svg = d3.select("svg")
               .attr("height", 500)
@@ -117,7 +124,7 @@ var updateChart = function(data,day) {
      .attr("fill", function(d) {
        return colors(d.name);});
 
-
+//******************************************** functions corresponding to buttons **************************************************//
 
 }
 
