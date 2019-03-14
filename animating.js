@@ -5,7 +5,7 @@ var gradesP = d3.json("gradeDataTime.json");
 
 gradesP.then(function(d)
 {
-  drawInitial(d,3);
+  drawInitial(d,0);
 },
 function(err)
 {
@@ -59,9 +59,9 @@ var drawInitial = function(data,day)
      .attr("x", function(d,i) {
        return xScale(i);})
      .attr("y", function (d,i) {
-       return height - d.grade;})
+       return yScale(d.grade);})
      .attr("width", barWidth)
-     .attr("height", function(d){return d.grade;})
+     .attr("height", function(d){return height - yScale(d.grade);})
      .attr("fill", function(d) {
       return colors(d.name);});
 
@@ -74,6 +74,16 @@ var drawInitial = function(data,day)
 
         previous1 = d3.select("#previous");
         previous1.on("click",function(d){previous(data,day)   });
+
+
+        var body = d3.select("body");
+        body.append("button")
+            .attr("id","next")
+            .text("Next");
+
+         next1 = d3.select("#next");
+         next1.on("click",function(d){next(data,day)   });
+
 
 
 
@@ -133,29 +143,50 @@ var updateChart = function(data,day)
      .attr("x", function(d,i) {
        return xScale(i);})
      .attr("y", function (d,i) {
-       return height - d.grade;})
+       return yScale(d.grade);})
      .attr("width", barWidth)
-     .attr("height",function(d){return d.grade})
+     .attr("height",function(d){return height - yScale(d.grade)})
      .attr("fill", function(d) {
        return colors(d.name);});
 
 
-    console.log(students,svg)
-//******************************************** functions corresponding to buttons **************************************************//
+//***************************************** functions corresponding to buttons **************************************************//
 
+  updateButtons(data,day)
 }
 
   var previous = function(data,currentDay)
 {
-  var newDay = parseInt(currentDay)-1;
+  var newDay = parseInt(currentDay);
   updateChart(data,newDay);
 
 }
 
-var next = function(data)
+var next = function(data,currentDay)
 {
-  var currentDay = d3.select("p").text();
-  var newDay = parseInt(currentDay)+1;
-  console.log(gradesP[1].grades);
+  var newDay = parseInt(currentDay);
+  console.log(currentDay)
   updateChart(data,newDay);
+}
+
+
+var updateButtons = function(data,day)
+{
+  var next1 = d3.select("#next");
+  next1.on("click",function(d){next(data,day+1) });
+
+
+
+  var previous1 = d3.select("#previous");
+  previous1.on("click",function(d){previous(data,day-1)   });
+
+
+
+
+
+
+
+
+
+
 }
