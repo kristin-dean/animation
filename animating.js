@@ -47,6 +47,8 @@ var drawInitial = function(data,day)
                  .domain([0,100])
                  .range([height,0]);
 
+  var xAxis = d3.axisBottom(xScale);
+
   var colors = d3.scaleOrdinal(d3.schemeSet3);
 
 
@@ -94,9 +96,13 @@ var updateChart = function(data,day)
 
               var svg = d3.select("svg")
               .attr("height", 500)
-              .attr("width", 500);
+              .attr("width", 500)
+              .classed(xAxis,true)
+              .call(xAxis);
+
               var students = data[day].grades;
               console.log(students);
+
   var margins =
   {
     left:10,
@@ -117,6 +123,8 @@ var updateChart = function(data,day)
   var yScale = d3.scaleLinear()
                  .domain([0,100])
                  .range([height,0]);
+
+
 
   var colors = d3.scaleOrdinal(d3.schemeSet3);
 
