@@ -69,7 +69,7 @@ var drawInitial = function(data,day)
            .append("title")
            .text(function(d)
            {
-              return d.name +"'s' grade is " + d.grade;
+              return d.name +"'s grade is " + d.grade;
            });
 
 
@@ -210,7 +210,7 @@ var updateChart = function(data,day)
      .append("title")
      .text(function(d)
      {
-        return d.name +"'s' grade is " + d.grade;
+        return d.name +"'s grade is " + d.grade;
      });
 
 
